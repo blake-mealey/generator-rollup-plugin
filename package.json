@@ -1,0 +1,26 @@
+{
+  "name": "generator-rollup-plugin",
+  "version": "0.0.1",
+  "description": "A yeoman generator for rollup plugin projects",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blake-mealey/generator-rollup-plugin.git"
+  },
+  "keywords": [
+    "yeoman-generator",
+    "rollup"
+  ],
+  "author": "Blake Mealey <blakemealey@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/blake-mealey/generator-rollup-plugin/issues"
+  },
+  "homepage": "https://github.com/blake-mealey/generator-rollup-plugin#readme",
+  "dependencies": {
+    "yeoman-generator": "^4.2.0"
+  },
+  "files": [
+    "generators"
+  ]
+}
