@@ -1,0 +1,14 @@
+import rollup from 'rollup';
+
+interface <%- `${changeCase.pascal(pluginName)}Options` %> {
+    /**
+     * An option.
+     * @default "defaultValue"
+     */
+    readonly optionName?: string;
+}
+
+/**
+ * <%- changeCase.sentence(pluginName) %> rollup plugin
+ */
+export default function <%- changeCase.camel(pluginName) %>(options?: <%- `${changeCase.pascal(pluginName)}Options` %>): rollup.Plugin;

@@ -1,0 +1,38 @@
+# <%- packageName %>
+
+<p>
+    <a href="https://david-dm.org/<%- githubUsername %>/<%- packageName %>?type=dev" alt="David">
+        <img src="https://img.shields.io/david/dev/<%- githubUsername %>/<%- packageName %>" /></a>
+</p>
+
+A Rollup.js plugin.
+
+## Installation
+
+```sh
+# yarn
+yarn add <%- packageName %> -D
+
+# npm
+npm i <%- packageName %> -D
+```
+
+## Usage
+
+```js
+// rollup.config.js
+import <%- changeCase.camel(pluginName) %> from '<%- packageName %>';
+
+export default {
+    input: 'src/index.js',
+    output: {
+        file: 'dist/bundle.js',
+        format: 'cjs'
+    },
+    plugins: {
+        <%- changeCase.camel(pluginName) %>({
+            optionName: `value`
+        })
+    }
+};
+```

@@ -1,0 +1,51 @@
+{
+    "name": "<%- packageName %>",
+    "version": "0.0.1",
+    "description": "pluginDescription",
+    "main": "dist/index.cjs.js",
+    "module": "dist/index.es.js",
+    "types": "index.d.ts",
+    "scripts": {
+        "build": "rollup -c",
+        "prepublishOnly": "npm run lint && npm run test && npm run build",
+        "test": "ava --verbose --serial",
+        "test:report": "npm run test -- --tap | tap-junit -o test-results -n test-results.xml",
+        "test:cover": "nyc npm run test:report",
+        "lint": "eslint src tests"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/<%- githubUsername %>/<%- packageName %>.git"
+    },
+    "files": [
+        "dist",
+        "index.d.ts",
+        "README.md"
+    ],
+    "keywords": [
+        "rollup",
+        "rollup-plugin",
+        <%- pluginName.split(`-`).map(s => `"${s}"`).join(`,`) %>
+    ],
+    "author": "<%- user.git.name() %> <<%- user.git.email() %>>",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/<%- githubUsername %>/<%- packageName %>/issues"
+    },
+    "homepage": "https://github.com/<%- githubUsername %>/<%- packageName %>#readme",
+    "devDependencies": {
+        "@babel/core": "^7.6.4",
+        "@babel/preset-env": "^7.6.3",
+        "ava": "^2.4.0",
+        "eslint": "^6.6.0",
+        "eslint-config-airbnb-base": "^14.0.0",
+        "eslint-plugin-import": "^2.18.2",
+        "esm": "^3.2.25",
+        "nyc": "^14.1.1",
+        "rollup": "^1.26.0",
+        "rollup-plugin-auto-external": "^2.0.0",
+        "rollup-plugin-babel": "^4.3.3",
+        "sinon": "^7.5.0",
+        "tap-junit": "^3.1.0"
+    }
+}
