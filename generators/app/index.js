@@ -16,7 +16,7 @@ module.exports = class extends Generator {
     }
 
     async prompting() {
-        const questions = [];
+        let questions = [];
 
         // if the user didn't supply the plugin name as an argument, ask them for it
         if (!this.options.pluginName) {
@@ -26,8 +26,18 @@ module.exports = class extends Generator {
                 message: `Your plugin name`,
                 default: this.appname,
                 filter: answer => changeCase.kebab(answer)
-            })
+            });
         }
+
+        questions = [
+            ...questions,
+            {
+                type: `confirm`,
+                name: `configureLinting`,
+                message: `Configure linting with ESLint?`,
+                default: true
+            }
+        ];
 
         const answers = await this.prompt(questions);
 
@@ -41,6 +51,8 @@ module.exports = class extends Generator {
 
         this.log(`Your plugin's name will be:`, this.pluginName);
         this.log(`Your package's name will be:`, this.packageName);
+
+        this.configureLinting = answers.configureLinting;
     }
 
     _copyTemplates(templatePaths) {
@@ -66,6 +78,36 @@ module.exports = class extends Generator {
             `package.json.ejs`,
             `LICENSE.ejs`,
             `README.md.ejs`,
+            `.gitignore.ejs`
         ]);
+
+        // Linting
+        if (this.configureLinting) {
+            this._copyTemplates([
+                `.eslintrc.yml.ejs`
+            ]);
+
+            this.fs.extendJSON(this.destinationPath(`package.json`), {
+                scripts: {
+                    lint: `eslint src tests`
+                }
+            });
+        }
+    }
+
+    _installPackages(packages) {
+        packages.forEach(package =>
+            this.npmInstall(package, { save: true }));
+    }
+
+    install() {
+        // Linting
+        if (this.configureLinting) {
+            this._installPackages([
+                `eslint`,
+                `eslint-plugin-import`,
+                `eslint-config-airbnb-base`
+            ]);
+        }
     }
 };

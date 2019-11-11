@@ -10,8 +10,7 @@
         "prepublishOnly": "npm run lint && npm run test && npm run build",
         "test": "ava --verbose --serial",
         "test:report": "npm run test -- --tap | tap-junit -o test-results -n test-results.xml",
-        "test:cover": "nyc npm run test:report",
-        "lint": "eslint src tests"
+        "test:cover": "nyc npm run test:report"
     },
     "repository": {
         "type": "git",
@@ -37,10 +36,6 @@
         "@babel/core": "^7.6.4",
         "@babel/preset-env": "^7.6.3",
         "ava": "^2.4.0",
-        "eslint": "^6.6.0",
-        "eslint-config-airbnb-base": "^14.0.0",
-        "eslint-plugin-import": "^2.18.2",
-        "esm": "^3.2.25",
         "nyc": "^14.1.1",
         "rollup": "^1.26.0",
         "rollup-plugin-auto-external": "^2.0.0",
