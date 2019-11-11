@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/blake-mealey/generator-rollup-plugin#readme",
   "dependencies": {
+    "change-case": "^3.1.0",
     "yeoman-generator": "^4.2.0"
   },
   "files": [
