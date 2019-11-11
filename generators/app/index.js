@@ -36,6 +36,12 @@ module.exports = class extends Generator {
                 name: `configureLinting`,
                 message: `Configure linting with ESLint?`,
                 default: true
+            },
+            {
+                type: `confirm`,
+                name: `configureAzurePipelines`,
+                message: `Configure CI with Azure Pipelines?`,
+                default: true
             }
         ];
 
@@ -49,10 +55,8 @@ module.exports = class extends Generator {
         }
         this.packageName = `${pluginNamePrefix}${this.pluginName}`;
 
-        this.log(`Your plugin's name will be:`, this.pluginName);
-        this.log(`Your package's name will be:`, this.packageName);
-
         this.configureLinting = answers.configureLinting;
+        this.configureAzurePipelines = answers.configureAzurePipelines;
     }
 
     _copyTemplates(templatePaths) {
@@ -81,6 +85,11 @@ module.exports = class extends Generator {
             `.gitignore.ejs`
         ]);
 
+        // Build
+        this._copyTemplates([
+            `rollup.config.js.ejs`
+        ]);
+
         // Linting
         if (this.configureLinting) {
             this._copyTemplates([
@@ -93,21 +102,46 @@ module.exports = class extends Generator {
                 }
             });
         }
-    }
 
-    _installPackages(packages) {
-        packages.forEach(package =>
-            this.npmInstall(package, { save: true }));
+        // CI
+        if (this.configureAzurePipelines) {
+            this._copyTemplates([
+                `azure-pipelines.yml.ejs`
+            ]);
+        }
     }
 
     install() {
+        let devDependencies = [];
+
+        // Build
+        devDependencies = [
+            ...devDependencies,
+            `@babel/core`,
+            `@babel/preset-env`,
+            `rollup`,
+            `rollup-plugin-auto-external`,
+            `rollup-plugin-babel`
+        ];
+
         // Linting
         if (this.configureLinting) {
-            this._installPackages([
+            devDependencies = [
+                ...devDependencies,
                 `eslint`,
                 `eslint-plugin-import`,
                 `eslint-config-airbnb-base`
-            ]);
+            ];
         }
+
+        // CI
+        if (this.configureAzurePipelines) {
+            devDependencies = [
+                ...devDependencies,
+                `tap-junit`
+            ];
+        }
+
+        this.npmInstall(devDependencies, { 'save-dev': true });
     }
 };
