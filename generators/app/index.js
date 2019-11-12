@@ -39,6 +39,12 @@ module.exports = class extends Generator {
             },
             {
                 type: `confirm`,
+                name: `configureTesting`,
+                message: `Configure testing with AVA, sinon, and nyc?`,
+                default: true
+            },
+            {
+                type: `confirm`,
                 name: `configureAzurePipelines`,
                 message: `Configure CI with Azure Pipelines?`,
                 default: true
@@ -56,7 +62,20 @@ module.exports = class extends Generator {
         this.packageName = `${pluginNamePrefix}${this.pluginName}`;
 
         this.configureLinting = answers.configureLinting;
+        this.configureTesting = answers.configureTesting;
         this.configureAzurePipelines = answers.configureAzurePipelines;
+    }
+
+    async _getGithubUsername() {
+        if (this.githubUsername) {
+            return this.githubUsername;
+        }
+
+        try {
+            this.githubUsername = await this.user.github.username();
+        } catch { }
+
+        return this.githubUsername;
     }
 
     _copyTemplates(templatePaths) {
@@ -67,8 +86,11 @@ module.exports = class extends Generator {
                 {
                     pluginName: this.pluginName,
                     packageName: this.packageName,
+                    configureLinting: this.configureLinting,
+                    configureTesting: this.configureTesting,
+                    configureAzurePipelines: this.configureAzurePipelines,
                     user: this.user,
-                    githubUsername: await this.user.github.username(),
+                    githubUsername: await this._getGithubUsername(),
                     changeCase
                 }
             ));
@@ -103,6 +125,15 @@ module.exports = class extends Generator {
             });
         }
 
+        // Testing
+        if (this.configureTesting) {
+            this._copyTemplates([
+                `tests/index.test.js.ejs`,
+                `ava.config.js.ejs`,
+                `.nycrc.yml.ejs`
+            ]);
+        }
+
         // CI
         if (this.configureAzurePipelines) {
             this._copyTemplates([
@@ -131,6 +162,16 @@ module.exports = class extends Generator {
                 `eslint`,
                 `eslint-plugin-import`,
                 `eslint-config-airbnb-base`
+            ];
+        }
+
+        // Testing
+        if (this.configureTesting) {
+            devDependencies = [
+                ...devDependencies,
+                `ava`,
+                `nyc`,
+                `sinon`
             ];
         }
 

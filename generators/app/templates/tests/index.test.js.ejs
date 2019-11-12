@@ -1,0 +1,13 @@
+import test from 'ava';
+import sinon from 'sinon';
+import <%- changeCase.camel(pluginName) %> from '../src';
+
+test.afterEach(() => {
+    sinon.restore();
+});
+
+test(`returns rollup plugin with correct name`, t => {
+    const plugin = <%- changeCase.camel(pluginName) %>();
+
+    t.is(plugin.name, `<%- pluginName %>`);
+});

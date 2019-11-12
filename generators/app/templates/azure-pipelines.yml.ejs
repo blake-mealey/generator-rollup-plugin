@@ -10,12 +10,15 @@ steps:
   inputs:
     command: install
 
+<% if (configureLinting) { -%>
 - task: Npm@1
   displayName: Run linter
   inputs:
     command: custom
     customCommand: run lint
+<% } -%>
 
+<% if (configureTesting) { -%>
 - task: Npm@1
   displayName: Run tests with coverage
   inputs:
@@ -36,6 +39,7 @@ steps:
   inputs:
     codeCoverageTool: Cobertura
     summaryFileLocation: coverage/cobertura-coverage.xml
+<% } -%>
 
 - task: Npm@1
   displayName: Build package

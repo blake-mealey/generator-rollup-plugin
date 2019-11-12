@@ -4,7 +4,9 @@ node_modules
 # Build
 dist
 
+<% if (configureTesting) { -%>
 # Reports
 .nyc_output
 coverage
 test-results
+<% } -%>

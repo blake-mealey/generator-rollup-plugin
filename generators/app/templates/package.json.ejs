@@ -7,14 +7,17 @@
     "types": "index.d.ts",
     "scripts": {
         "build": "rollup -c",
-        "prepublishOnly": "npm run lint && npm run test && npm run build",
-        "test": "ava --verbose --serial",
-        "test:report": "npm run test -- --tap | tap-junit -o test-results -n test-results.xml",
-        "test:cover": "nyc npm run test:report"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/<%- githubUsername %>/<%- packageName %>.git"
+        "prepublishOnly": "<%- [ ...(configureLinting ? [`lint`] : []),
+                                 ...(configureTesting ? [`test`] : []),
+                                 `build` ]
+                                 .map(s => `npm run ${s}`).join(` && `) %>",
+        <% if (configureTesting) { %>
+            "test": "ava --verbose --serial",
+            <% if (configureAzurePipelines) { %>
+                "test:report": "npm run test -- --tap | tap-junit -o test-results -n test-results.xml",
+            <% } %>
+            "test:cover": "nyc npm run <%- configureAzurePipelines ? `test:report` : `test` %>"
+        <% } %>
     },
     "files": [
         "dist",
@@ -28,13 +31,14 @@
     ],
     "author": "<%- user.git.name() %> <<%- user.git.email() %>>",
     "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/<%- githubUsername %>/<%- packageName %>/issues"
-    },
-    "homepage": "https://github.com/<%- githubUsername %>/<%- packageName %>#readme",
-    "devDependencies": {
-        "ava": "^2.4.0",
-        "nyc": "^14.1.1",
-        "sinon": "^7.5.0"
-    }
+    <% if (githubUsername) { %>
+        "repository": {
+            "type": "git",
+            "url": "git+https://github.com/<%- githubUsername %>/<%- packageName %>.git"
+        },
+        "bugs": {
+            "url": "https://github.com/<%- githubUsername %>/<%- packageName %>/issues"
+        },
+        "homepage": "https://github.com/<%- githubUsername %>/<%- packageName %>#readme"
+    <% } %>
 }
