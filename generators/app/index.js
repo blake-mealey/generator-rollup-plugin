@@ -117,12 +117,6 @@ module.exports = class extends Generator {
             this._copyTemplates([
                 `.eslintrc.yml.ejs`
             ]);
-
-            this.fs.extendJSON(this.destinationPath(`package.json`), {
-                scripts: {
-                    lint: `eslint src tests`
-                }
-            });
         }
 
         // Testing

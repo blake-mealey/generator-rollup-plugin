@@ -16,7 +16,10 @@
             <% if (configureAzurePipelines) { %>
                 "test:report": "npm run test -- --tap | tap-junit -o test-results -n test-results.xml",
             <% } %>
-            "test:cover": "nyc npm run <%- configureAzurePipelines ? `test:report` : `test` %>"
+            "test:cover": "nyc npm run <%- configureAzurePipelines ? `test:report` : `test` %>",
+        <% } %>
+        <% if (configureLinting) { %>
+            "lint": "eslint src tests"
         <% } %>
     },
     "files": [
